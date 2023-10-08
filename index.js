@@ -199,23 +199,39 @@ if (fs.existsSync(eventsFolder)) {
 }
 
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+client.on('interactionCreate', async (interaction) => {
+  if (interaction.isChatInputCommand()) {
+    const command = client.commands.get(interaction.commandName);
 
-  const command = client.commands.get(interaction.commandName);
+    if (!command) return;
 
-  if (!command) return;
+    try {
+      await command.execute(interaction, client);
+    } catch (error) {
+      console.error(error);
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+      } else {
+        await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+      }
+    }
+  }
+  else if (interaction.isButton()) {
+    const { customId, member } = interaction;
 
-  try {
-    await command.execute(interaction, client);
-  } catch (error) {
-    console.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
-    } else {
-      await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+    if (customId.startsWith('addrole_')) {
+      const roleToAdd = customId.split('_')[1];
+      const role = interaction.guild.roles.cache.find(r => r.name.toLowerCase() === roleToAdd);
+      
+      if (role) {
+        await member.roles.add(role);
+        await interaction.reply({ content: `You have been given the ${role.name} role!`, ephemeral: true });
+      } else {
+        await interaction.reply({ content: `Role ${roleToAdd} not found.`, ephemeral: true });
+      }
     }
   }
 });
+
 
 client.login(token);
