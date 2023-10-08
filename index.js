@@ -223,10 +223,16 @@ client.on('interactionCreate', async (interaction) => {
       const roleToAdd = customId.split('_')[1];
       const role = interaction.guild.roles.cache.find(r => r.name.toLowerCase() === roleToAdd);
       
-      if (role) {
+      
+      if (role && member.roles.cache.has(role.id)) {
+        await member.roles.remove(role);
+        await interaction.reply({ content: `You have been removed from the ${role.name} role!`, ephemeral: true });
+      }
+      else if (role) {
         await member.roles.add(role);
         await interaction.reply({ content: `You have been given the ${role.name} role!`, ephemeral: true });
-      } else {
+      } 
+      else {
         await interaction.reply({ content: `Role ${roleToAdd} not found.`, ephemeral: true });
       }
     }
