@@ -119,7 +119,7 @@ client.on("guildMemberAdd", async (member) => {
     const buffer = await createWelcomeCanvas(member.user.username, avatarURL);
     const attachment = new AttachmentBuilder(buffer, 'welcome-image.png');
 
-    const channel = await client.channels.fetch('680997363896025284');
+    const channel = await client.channels.fetch('702729548286132317');
     channel.send({ content: `${selectedMessage}${member.user.username}!`, files: [attachment] });
   } catch (error) {
     console.error("Error fetching or sending a message to the channel:", error);
@@ -183,6 +183,21 @@ async function createWelcomeCanvas(username, avatarURL) {
   // Return canvas buffer
   return await canvas.encode('png');
 }
+
+const eventsFolder = path.join(__dirname, 'events');
+if (fs.existsSync(eventsFolder)) {
+  const eventFiles = fs.readdirSync(eventsFolder).filter(file => file.endsWith('.js'));
+
+  for (const file of eventFiles) {
+    const event = require(`./events/${file}`);
+    if (event.once) {
+      client.once(event.name, (...args) => event.execute(...args, client));
+    } else {
+      client.on(event.name, (...args) => event.execute(...args, client));
+    }
+  }
+}
+
 
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
