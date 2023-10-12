@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, embedLength } = require('discord.js');
+const { SlashCommandBuilder } = require('discord.js');
 const { EmbedBuilder } = require('discord.js');
 
 // Helper function to roll a die
@@ -27,18 +27,26 @@ module.exports = {
                 .setDescription('Number of dice to roll')
                 .setRequired(true))
         .addIntegerOption(option =>
-            option.setName('modifier')
-                .setDescription('Add a modifier to the roll')
+            option.setName('totalmodifier')
+                .setDescription('Add a modifier to the total roll amount')
+                .setRequired(false))
+        .addIntegerOption(option =>
+            option.setName('individualmodifier')
+                .setDescription('Add a modifier to each individual roll')
                 .setRequired(false)),
     async execute(interaction) {
         const amount = interaction.options.getInteger('amount');
         const numberOfDice = interaction.options.getInteger('dice');
-        const modifier = interaction.options.getInteger('modifier') || 0;  // Default to 0 if not provided
+        const modifier = interaction.options.getInteger('totalmodifier') || 0;  // Default to 0 if not provided
+        const individualModifier = interaction.options.getInteger('individualmodifier') || 0;  // Default to 0 if not provided
 
         const rolls = rollMultipleDice(amount, numberOfDice);
-        const total = rolls.reduce((a, b) => a + b, 0);
+        const rollsWithIndividualModifiers = rolls.map(roll => roll + individualModifier);
+        const total = rollsWithIndividualModifiers.reduce((a, b) => a + b, 0);
         const modifiedTotal = total + modifier;
         const totalAmount = amount * numberOfDice;
+
+        const rollsWithModifiersStrings = rolls.map((roll, index) => `${roll}+${individualModifier}`);
 
         if (rolls[0] === "Invalid roll amount. Please enter a natural number.") {
             await interaction.reply({
@@ -60,21 +68,21 @@ module.exports = {
             return;
         }
 
-        let responseEmbedDescription = modifier > 0 ? 
-        `You rolled: [${rolls.join(', ')}] + ${modifier} for a total of ${modifiedTotal} out of ${totalAmount}!` :
-        `You rolled: ${rolls.join(', ')} for a total of ${total} out of ${totalAmount}!`;
+        let responseEmbedDescription = modifier > 0 ?
+        `You rolled: [${rollsWithModifiersStrings.join(', ')}] + ${modifier} for a total of ${modifiedTotal} out of ${totalAmount}!` :
+        `You rolled: [${rollsWithModifiersStrings.join(', ')}] for a total of ${total} out of ${totalAmount}!`;
     
-    if (modifiedTotal === 1 && modifier === 0) {
-        responseEmbedDescription += ' Heheh, you are in the blood basket now, ya overgrown manlet!';
-    }
+        if (modifiedTotal === 1 && modifier === 0 && individualModifier === 0) {
+            responseEmbedDescription += ' Heheh, you are in the blood basket now, ya overgrown manlet!';
+        }
+        
+        let response = {
+            embeds: [
+                new EmbedBuilder().setDescription(responseEmbedDescription)
+            ]
+        };
     
-    let response = {
-        embeds: [
-            new EmbedBuilder().setDescription(responseEmbedDescription)
-        ]
+        await interaction.reply(response);
+        
+        },
     };
-    
-    await interaction.reply(response);
-    
-    },
-};

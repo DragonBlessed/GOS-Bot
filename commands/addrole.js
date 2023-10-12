@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ButtonBuilder, ActionRowBuilder, PermissionsBitFiel
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('addrolesystem')
-    .setDescription('Sends a message to add roles to yourself.')
+    .setDescription('Sends buttons for users to add roles.')
     .addStringOption(option =>
       option
         .setName('message')
