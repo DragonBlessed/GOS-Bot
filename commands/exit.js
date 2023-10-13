@@ -25,12 +25,12 @@ module.exports = {
             } else {
                 const success = queue.delete();
                 if (success) {
-                    embed.setDescription(`Exited queue! The time will come when you will burn as you inject yourself upon the wooden stakes, and I shall be there to watch every minute, basking in your bath of the inferno, until you are gone from this world.`)
+                    embed.setDescription(`Exited queue! The time will come when you will burn as you inject yourself upon the wooden stakes, and I shall be there to watch every minute, basking in the satisfaction from your bath of the inferno, until you are gone from this world.`)
                     .setFooter({
                         text: `Requested by ${interaction.user.username}`
                     });
                 } else {
-                    embed.setDescription('Exited queue! The time will come when you will burn as you inject yourself upon the wooden stakes, and I shall be there to watch every minute, basking in your bath of the inferno, until you are gone from this world.')
+                    embed.setDescription('Exited queue! The time will come when you will burn as you inject yourself upon the wooden stakes, and I shall be there to watch every minute, basking in the satisfaction from your bath of the inferno, until you are gone from this world.')
                     .setFooter({
                         text: `Requested by ${interaction.user.username}`
                     });
