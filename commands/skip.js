@@ -1,26 +1,45 @@
-const {SlashCommandBuilder} = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 const { EmbedBuilder } = require('discord.js');
+const { useQueue } = require("discord-player");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('Skip the current song - NOT WORKING ATM'),
-    async execute(interaction, client) {
-        const queue = await client.player.getQueue(interaction.guild);
+        .setDescription('Skip the current song'),
+    async execute(interaction) {
+        const player = interaction.client.player;
+        const channel = interaction.member.voice.channel;
 
-        if (!queue || !queue.playing) {
-            await interaction.reply('No music is playing!');
+        if (!channel) {
+            await interaction.reply('You are not connected to a voice channel!');
             return;
         }
 
-        const CurrentSong = queue.current;
+        await interaction.deferReply();
+        let embed = new EmbedBuilder();
 
-        queue.skip();
+        try {
+            const queue = useQueue(interaction.guild.id);
+            
+            if (!queue || !queue.isPlaying) {
+                embed.setDescription('No music is being played.');
+            } else {
+                const currentTrack = queue.currentTrack;
+                const success = queue.node.skip()
+                if (success) {
+                    embed.setDescription(`Skipped: [${currentTrack.title}](${currentTrack.url})[${currentTrack.duration}]`)
+                    .setThumbnail(currentTrack.thumbnail)
+                    .setFooter({
+                        text: `Requested by ${interaction.user.username} | Duration: ${currentTrack.duration}`
+                    });
+                } else {
+                    embed.setDescription('Could not skip the current song.');
+                }
+            }
+        } catch (e) {
+            embed.setDescription(`Something went wrong: ${e.message}`);
+        }
 
-        await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                    .setDescription(`Skipped: [${CurrentSong.title}](${CurrentSong.url})`)
-                    .setThumbnail(CurrentSong.thumbnail)
-            ]
-    });}}
+        await interaction.followUp({ embeds: [embed] });
+    }
+};
