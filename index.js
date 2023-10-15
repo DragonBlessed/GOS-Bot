@@ -17,7 +17,8 @@ const client = new Client({ intents: [
 	GatewayIntentBits.Guilds, 
 	GatewayIntentBits.GuildMembers, 
 	GatewayIntentBits.GuildMessages,
-	GatewayIntentBits.GuildVoiceStates
+	GatewayIntentBits.GuildVoiceStates,
+  GatewayIntentBits.GuildMessageReactions
 ] });
 
 client.commands = new Collection();
@@ -198,11 +199,21 @@ if (fs.existsSync(eventsFolder)) {
   }
 }
 
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+  if (reaction.partial) {
+    try {
+        await reaction.fetch();
+    } catch (error) {
+        console.error('Something went wrong when fetching the message:', error);
+        return;
+    }
+  }
+});
+
 
 client.on('interactionCreate', async (interaction) => {
   if (interaction.isChatInputCommand()) {
     const command = client.commands.get(interaction.commandName);
-
     if (!command) return;
 
     try {
