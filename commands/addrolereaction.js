@@ -80,9 +80,11 @@ module.exports = {
                 const emojiName = reaction.emoji.name;
                 const roleIndex = emojis.indexOf(emojiName);
                 const roleName = roles[roleIndex].trim();
-                const role = guild.roles.cache.find(r => r.name === roleName);
+                const role = guild.roles.cache.find(r => r.name.toLowerCase() === roleName.toLowerCase());
                 const member = guild.members.cache.get(user.id);
                 
+                
+
                 if (role && member.roles.cache.has(role.id)) {
                     member.roles.remove(role).catch(console.error);
                 }
