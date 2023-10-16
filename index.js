@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { AttachmentBuilder, Client, Collection, Events, GatewayIntentBits, ActivityType } = require('discord.js');
+const { AttachmentBuilder, Client, Collection, Events, GatewayIntentBits, ActivityType, Partials } = require('discord.js');
 const { token } = require('./config.json');
 const { Routes } = require('discord-api-types/v9');
 const {REST} = require('@discordjs/rest');
@@ -19,6 +19,10 @@ const client = new Client({ intents: [
 	GatewayIntentBits.GuildMessages,
 	GatewayIntentBits.GuildVoiceStates,
   GatewayIntentBits.GuildMessageReactions
+], partials: [ 
+  Partials.Message, 
+  Partials.Channel, 
+  Partials.Reaction
 ] });
 
 client.commands = new Collection();

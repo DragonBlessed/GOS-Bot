@@ -73,7 +73,7 @@ module.exports = {
             const filter = (reaction, user) => emojis.includes(reaction.emoji.name) && user.id === userId;
 
             // Create a reaction collector
-            const collector = message.createReactionCollector({ filter, time: 60000 });
+            const collector = message.createReactionCollector({ filter });
 
             collector.on('collect', (reaction, user) => {
                 const guild = reaction.message.guild;
