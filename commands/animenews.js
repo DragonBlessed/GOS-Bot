@@ -8,21 +8,14 @@ let counter = 0;
 
 async function fetchAndLogSourceContent(sourceUrl) {
     try {
-        const response = await axios.get(sourceUrl);
-        const $ = cheerio.load(response.data); // Load the HTML content into cheerio
-
-        // extract the image from the page
+        const response = await axios.get(sourceUrl); 
+        const $ = cheerio.load(response.data); // load html into cheerio
+        // check if the first image is a relative path, if so, append the base url
         let imageUrl = $('img').first().attr('src');
-
-        // Check if the URL is relative
         if (imageUrl && imageUrl.startsWith('/')) {
-            // Extract the base URL (domain) from the source URL
             const baseUrl = new URL(sourceUrl).origin;
             imageUrl = baseUrl + imageUrl;
         }
-
-        console.log("Extracted Image URL:", imageUrl);
-
         return imageUrl;
     } catch (error) {
         console.error('Error fetching source content:', error);
@@ -30,29 +23,25 @@ async function fetchAndLogSourceContent(sourceUrl) {
     }
 }
 
-
-
 async function fetchNewsRSS(animeName) {
     try {
         const response = await axios.get(`http://news.google.com/news?q=${encodeURIComponent(animeName)}&output=rss`);
         const parser = new xml2js.Parser();
         const result = await parser.parseStringPromise(response.data);
+        const newsItems = result?.rss?.channel?.[0]?.item || []; // return link, title, and source url from first article
 
-        
-        // Return the link and title to the first news article
-        const newsLink = result?.rss?.channel?.[0]?.item?.[0]?.link?.[0];
-        const newsTitle = result?.rss?.channel?.[0]?.item?.[0]?.title?.[0];
-        const newsSourceUrl = result?.rss?.channel?.[0]?.item?.[0]?.source?.[0]?.$?.url;
-        const newsImage = await fetchAndLogSourceContent(newsSourceUrl); // Fetch and log the content
-        console.log(newsLink)
-        console.log(newsSourceUrl)
+        const newsArray = newsItems
+            .filter(item => !item?.source?.[0]?.$?.url?.includes('crunchyroll.com')) // Filter out Crunchyroll
+            .map(item => ({
+                newsLink: item?.link?.[0],
+                newsTitle: item?.title?.[0],
+                newsSourceUrl: item?.source?.[0]?.$?.url
+            }));
 
-        
-
-        return { newsLink, newsTitle, newsImage };
+        return newsArray;
     } catch (error) {
         console.error('Error fetching RSS:', error);
-        return null;
+        return [];
     }
 }
 
@@ -73,12 +62,12 @@ module.exports = {
                         .setThumbnail('https://cdn.mos.cms.futurecdn.net/8MonXm7hwis8QpALHm4NQN.jpg')
                 ]
             });
-            return; // Exit early to prevent further processing
+            return; // exit early to prevent further processing
         }
 
         try {
             const animeName = interaction.options.getString('anime');
-            if (!animeName || animeName.length <= 1 || animeName.length > 100 || animeName === 'null' || animeName === 'undefined' || animeName === 'NaN' || animeName.match(/[^a-zA-Z0-9 ]/g)) {
+            if (!animeName || animeName.length <= 1 || animeName.length > 100 || animeName === 'null' || animeName === 'undefined' || animeName === 'NaN' || animeName.match(/[^a-zA-Z0-9 :;'-.!]/g)) {
                 await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
@@ -88,8 +77,19 @@ module.exports = {
                 });
                 return;
             }
-            const { newsLink, newsTitle, newsImage } = await fetchNewsRSS(animeName);
-            
+
+            const newsArray = await fetchNewsRSS(animeName);
+            let newsLink, newsTitle, newsImage;
+
+            // loop through the news array to find a news article with a valid link and image
+            for (const newsItem of newsArray) {
+                newsLink = newsItem.newsLink;
+                newsTitle = newsItem.newsTitle;
+                newsImage = await fetchAndLogSourceContent(newsItem.newsSourceUrl);
+                if (newsLink && (newsImage && (newsImage.startsWith('http:') || newsImage.startsWith('https:')))) {
+                    break;
+                }
+            }
 
             if (!newsLink) {
                 await interaction.reply({
@@ -98,22 +98,24 @@ module.exports = {
                         .setDescription(`No news article found for ${animeName}.`)
                         .setThumbnail('https://cdn.mos.cms.futurecdn.net/8MonXm7hwis8QpALHm4NQN.jpg')
                 ]
-            });
+                });
                 return;
             }
 
-
-            await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
+            const embed = new EmbedBuilder()
                         .setDescription(`[**${newsTitle}**](${newsLink})`)
                         .setFooter({
                             text: `Requested by ${interaction.user.username} for [${animeName}]`
-                        })
-                        .setThumbnail(newsImage)
-                ]
+                        });
+                        
+            if (newsImage && (newsImage.startsWith('http:') || newsImage.startsWith('https:'))) {
+                embed.setThumbnail(newsImage);
+            }
+
+            await interaction.reply({
+                embeds: [embed]
             });
-            counter++;  // Increment the counter for every executed query
+            counter++; // Counter to prevent too many queries each day
 
         } catch (error) {
             console.error('Error fetching news link:', error);
@@ -121,10 +123,8 @@ module.exports = {
                 embeds: [
                     new EmbedBuilder()
                         .setDescription('There was an error fetching the link. Please try again later.')
-                        .setThumbnail('https://cdn.mos.cms.futurecdn.net/8MonXm7hwis8QpALHm4NQN.jpg')
                 ]
             });
         }
     }
-}
-
+};
