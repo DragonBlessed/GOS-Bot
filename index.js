@@ -1,7 +1,8 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { AttachmentBuilder, Client, Collection, Events, GatewayIntentBits, ActivityType, Partials } = require('discord.js');
-const { token } = require('./config.json');
+const { token, api_key, channel_id, userid1, userid2, userid3, userid4 } = require('./config.json');
+const { Configuration, OpenAIApi } = require('openai');
 const { Routes } = require('discord-api-types/v9');
 const {REST} = require('@discordjs/rest');
 const { Player, QueryType } = require('discord-player');
@@ -254,5 +255,50 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
+const specialUsers = [
+  userid1,
+  userid2,
+  userid3,
+  userid4
+]
+
+const configuration = new Configuration({
+  apiKey: api_key,
+});
+
+const openai = new OpenAIApi(configuration);
+
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+  if (message.channelId !== channel_id) return;
+  let conversationLog;
+  if (specialUsers.includes(message.author.id)) {
+    conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+  } else {
+    conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+  }
+
+  await message.channel.sendTyping();
+
+
+  let prevMessages = await message.channel.messages.fetch({ limit: 15 });
+  prevMessages.reverse();
+
+  prevMessages.forEach((msg) => {
+    if (msg.author.bot) return;
+    let role = (msg.author.id === client.user.id) ? 'assistant' : 'user';
+    conversationLog.push({
+      role: role,
+      content: msg.content,
+    });
+  });
+
+  const result = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: conversationLog,
+  });
+
+  message.reply(result.data.choices[0].message);
+});
 
 client.login(token);
