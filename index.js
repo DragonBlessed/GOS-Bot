@@ -276,9 +276,9 @@ client.on('messageCreate', async (message) => {
 
     let conversationLog;
     if (specialUsers.includes(message.author.id)) { // if a special user, then friendly. else, abrasive
-      conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3. You serve the Absolute. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+      conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3..." }];
     } else {
-      conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3. You serve the Absolute. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+      conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3..." }];
     }
 
     await message.channel.sendTyping();
