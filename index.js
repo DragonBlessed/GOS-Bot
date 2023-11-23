@@ -255,13 +255,12 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
-// Users the bot is "friendly" to
 const specialUsers = [
-  'userid1',
-  'userid2',
-  'userid3',
-  'userid4'
-];
+  userid1,
+  userid2,
+  userid3,
+  userid4
+]
 
 const configuration = new Configuration({
   apiKey: api_key,
@@ -270,47 +269,36 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 client.on('messageCreate', async (message) => {
-  try {
-    if (message.author.bot) return;
-    if (message.channelId !== channel_id) return;
-
-    let conversationLog;
-    if (specialUsers.includes(message.author.id)) { // if a special user, then friendly. else, abrasive
-      conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3..." }];
-    } else {
-      conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3..." }];
-    }
-
-    await message.channel.sendTyping();
-
-    // read the last 15 messages in the channel
-    let prevMessages = await message.channel.messages.fetch({ limit: 15 });
-    prevMessages.reverse();
-
-    prevMessages.forEach((msg) => {
-      if (msg.author.bot) return;
-      let role = (msg.author.id === client.user.id) ? 'assistant' : 'user';
-      conversationLog.push({
-        role: role,
-        content: msg.content,
-      });
-    });
-
-    const result = await openai.createChatCompletion({
-      model: 'gpt-3.5-turbo',
-      messages: conversationLog,
-    });
-
-    if (result.data.choices[0] && result.data.choices[0].message) {
-      await message.reply(result.data.choices[0].message);
-    } else {
-      throw new Error("Invalid response from OpenAI.");
-    }
-  } catch (error) {
-    console.error("Error occurred in messageCreate event:", error);
-    // reply to the user that an error occurred
-    await message.reply("Sorry, I encountered an error and couldn't process your request.");
+  if (message.author.bot) return;
+  if (message.channelId !== channel_id) return;
+  let conversationLog;
+  if (specialUsers.includes(message.author.id)) {
+    conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+  } else {
+    conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
   }
+
+  await message.channel.sendTyping();
+
+
+  let prevMessages = await message.channel.messages.fetch({ limit: 15 });
+  prevMessages.reverse();
+
+  prevMessages.forEach((msg) => {
+    if (msg.author.bot) return;
+    let role = (msg.author.id === client.user.id) ? 'assistant' : 'user';
+    conversationLog.push({
+      role: role,
+      content: msg.content,
+    });
+  });
+
+  const result = await openai.createChatCompletion({
+    model: 'gpt-3.5-turbo',
+    messages: conversationLog,
+  });
+
+  message.reply(result.data.choices[0].message);
 });
 
 client.login(token);
