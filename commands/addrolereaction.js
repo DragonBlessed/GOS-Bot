@@ -85,12 +85,14 @@ module.exports = {
                 
                 
 
-                if (role && member.roles.cache.has(role.id)) {
+                if (role && member.roles.cache.has(role.id)) {                   
                     member.roles.remove(role).catch(console.error);
+                    interaction.followUp({ content: `You have been removed from the ${roleName} role!`, ephemeral: true });
                 }
 
                 else if (role) {
                     member.roles.add(role).catch(console.error);
+                    interaction.followUp({ content: `You have been given the ${roleName} role!`, ephemeral: true });
                 }
             });
 

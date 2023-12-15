@@ -125,7 +125,7 @@ client.on("guildMemberAdd", async (member) => {
     const buffer = await createWelcomeCanvas(member.user.username, avatarURL);
     const attachment = new AttachmentBuilder(buffer, 'welcome-image.png');
 
-    const channel = await client.channels.fetch('702729548286132317');
+    const channel = await client.channels.fetch('680997363896025284');
     channel.send({ content: `${selectedMessage}${member.user.username}!`, files: [attachment] });
   } catch (error) {
     console.error("Error fetching or sending a message to the channel:", error);
@@ -273,9 +273,9 @@ client.on('messageCreate', async (message) => {
   if (message.channelId !== channel_id) return;
   let conversationLog;
   if (specialUsers.includes(message.author.id)) {
-    conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+    conversationLog = [{role: 'system', content: "You are a submissive goblin chatbot from Baldur's Gate 3. You serve the Absolute and it's chosen, which are the specialUsers. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
   } else {
-    conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
+    conversationLog = [{role: 'system', content: "You are an abrasive goblin chatbot from Baldur's Gate 3. You serve the Absolute and it's chosen, which are the specialUsers. You must use words like 'shite', 'bloody', 'ya'. Don't be eloquent and don't act Australian, British, Kiwi or the like." }];
   }
 
   await message.channel.sendTyping();
