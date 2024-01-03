@@ -125,7 +125,7 @@ client.on("guildMemberAdd", async (member) => {
     const buffer = await createWelcomeCanvas(member.user.username, avatarURL);
     const attachment = new AttachmentBuilder(buffer, 'welcome-image.png');
 
-    const channel = await client.channels.fetch('680997363896025284');
+    const channel = await client.channels.fetch('306213805279674368');
     channel.send({ content: `${selectedMessage}${member.user.username}!`, files: [attachment] });
   } catch (error) {
     console.error("Error fetching or sending a message to the channel:", error);
