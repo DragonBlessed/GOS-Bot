@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { AttachmentBuilder, Client, Collection, Events, GatewayIntentBits, ActivityType, Partials } = require('discord.js');
-const { token, api_key, channel_id, userid1, userid2, userid3, userid4 } = require('./config.json');
+const { token, api_key, channel_id, guildId, userid1, userid2, userid3, userid4 } = require('./config.json');
 const { Configuration, OpenAIApi } = require('openai');
 const { Routes } = require('discord-api-types/v9');
 const {REST} = require('@discordjs/rest');
@@ -125,7 +125,7 @@ client.on("guildMemberAdd", async (member) => {
     const buffer = await createWelcomeCanvas(member.user.username, avatarURL);
     const attachment = new AttachmentBuilder(buffer, 'welcome-image.png');
 
-    const channel = await client.channels.fetch('guildId'); 
+    const channel = await client.channels.fetch('guildId); 
     channel.send({ content: `${selectedMessage}${member.user.username}!`, files: [attachment] });
   } catch (error) {
     console.error("Error fetching or sending a message to the channel:", error);
