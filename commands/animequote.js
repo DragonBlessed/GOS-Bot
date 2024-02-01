@@ -112,7 +112,15 @@ const animeQuotes = [
     "\"Searching for someone to blame is such a pain.\ - Satoru Gojo (Jujutsu Kaisen)",
     "\"I, Giorno Giovanna, have a dream!\" - Giorno Giovanna (Jojo's Bizarre Adventure)",
     "\"Impossible? We did a lot of impossible things on this journey. I’m tired of hearing that things are impossible or useless. Those words mean nothing to us.\" - Jotaro Kujo (Jojo's Bizarre Adventure)",
-    "\"It can be said that humans live by destroying. In the midst of that, your power is kinder than anything else.\" - Jotaro Kujo to Josuke Higashikata (Jojo's Bizarre Adventure)"
+    "\"It can be said that humans live by destroying. In the midst of that, your power is kinder than anything else.\" - Jotaro Kujo to Josuke Higashikata (Jojo's Bizarre Adventure)",
+    "\"The worst battle is between what you know, and what you feel.\" - Violet Evergarden (Violet Evergarden)",
+    "\"Just so you know, I've always loved listening to you talk about your dreams, Denji. Here's a new contract for you. This time, you're getting my heart. In exchange, show me your dreams. That's all I ask of you.\" - Pochita (Chainsaw Man)",
+    "\"Do not forget that you are certain to die someday, and as such, you have all the more reason to live now.\" - Decim (Death Parade)",
+    "\"Everybody Matters To Somebody.\" - Chiyuki (Death Parade)",
+    "\"Remember. You can feel it if you hold your hand against your chest. It belongs to no one. It's our pulse, yours and mine. This is what brings us to the truth. It's what proves that we are the very world itself. Follow your instincts. The answer is already there.\" - Ergo Proxy (Ergo Proxy)",
+    "\"I'm not going to die. I'm going to find out if I'm really alive.\" - Re-l Mayer (Ergo Proxy)",
+    "\"People are like dice, a certain Frenchman said that. You throw yourself in the direction of your own choosing. People are free because they can do that. Everyone's circumstances are different, but no matter how small the choice, at the very least, you can throw yourself. It's not chance or fate. It's the choice you made.\" - Yukio Washimine (Black Lagoon)",
+    "\"If you cling to life, you live in fear of death. And that fear will cloud your judgment.\" - Revy Rebecca (Black Lagoon)" 
 ];
 
 module.exports = {
