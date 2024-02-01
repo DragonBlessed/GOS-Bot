@@ -107,7 +107,12 @@ const animeQuotes = [
     "\"A lesson without pain is meaningless for you cannot gain something without sacrificing something else in return.\" - Edward Elric (Fullmetal Alchemist)",
     "\"There’s no such thing as fair or unfair in battle. There is only victory or in your case, defeat.\" - Vegeta (Dragon Ball Z)",
     "\"Even the mightiest warriors experience fears. What makes them a true warrior is the courage that they posses to overcome their fears.\" - Vegeta (Dragon Ball Z)",
-    "\"Endure it. Don’t let go.\" - Armin Arlert (Attack on Titan)"
+    "\"Endure it. Don’t let go.\" - Armin Arlert (Attack on Titan)",
+    "\"It's Not About Whether I Can. I Have To Do It.\" - Megumi Fushiguro (Jujutsu Kaisen)",
+    "\"Searching for someone to blame is such a pain.\ - Satoru Gojo (Jujutsu Kaisen)",
+    "\"I, Giorno Giovanna, have a dream!\" - Giorno Giovanna (Jojo's Bizarre Adventure)",
+    "\"Impossible? We did a lot of impossible things on this journey. I’m tired of hearing that things are impossible or useless. Those words mean nothing to us.\" - Jotaro Kujo (Jojo's Bizarre Adventure)",
+    "\"It can be said that humans live by destroying. In the midst of that, your power is kinder than anything else.\" - Jotaro Kujo to Josuke Higashikata (Jojo's Bizarre Adventure)"
 ];
 
 module.exports = {
