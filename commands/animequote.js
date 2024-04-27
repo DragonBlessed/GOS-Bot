@@ -104,7 +104,6 @@ const animeQuotes = [
     "\"The moon does not mourn over the dead. What it does is shine a light on the truth.\" - Shinichi Kudo (Detective Conan)",
     "\"By looking at what’s blocking our way, with an open mind, a wall can be turned into a wide open door.\" - Shinichi Kudo (Detective Conan)",
     "\"When people make a mistake, it is nice to give them advice, but… if they don’t listen, just leave them alone. Otherwise you’ll do yourself a disservice by wasting your time and effort.\" - Ran Mouri (Detective Conan)",
-    "\"A lesson without pain is meaningless for you cannot gain something without sacrificing something else in return.\" - Edward Elric (Fullmetal Alchemist)",
     "\"There’s no such thing as fair or unfair in battle. There is only victory or in your case, defeat.\" - Vegeta (Dragon Ball Z)",
     "\"Even the mightiest warriors experience fears. What makes them a true warrior is the courage that they posses to overcome their fears.\" - Vegeta (Dragon Ball Z)",
     "\"Endure it. Don’t let go.\" - Armin Arlert (Attack on Titan)",
@@ -120,7 +119,9 @@ const animeQuotes = [
     "\"Remember. You can feel it if you hold your hand against your chest. It belongs to no one. It's our pulse, yours and mine. This is what brings us to the truth. It's what proves that we are the very world itself. Follow your instincts. The answer is already there.\" - Ergo Proxy (Ergo Proxy)",
     "\"I'm not going to die. I'm going to find out if I'm really alive.\" - Re-l Mayer (Ergo Proxy)",
     "\"People are like dice, a certain Frenchman said that. You throw yourself in the direction of your own choosing. People are free because they can do that. Everyone's circumstances are different, but no matter how small the choice, at the very least, you can throw yourself. It's not chance or fate. It's the choice you made.\" - Yukio Washimine (Black Lagoon)",
-    "\"If you cling to life, you live in fear of death. And that fear will cloud your judgment.\" - Revy Rebecca (Black Lagoon)" 
+    "\"If you cling to life, you live in fear of death. And that fear will cloud your judgment.\" - Revy Rebecca (Black Lagoon)",
+    "\"Everything has a beginning and an end. Life is just a cycle of starts and stops. There are ends we don't desire, but they're inevitable, we have to face them. It's what being human is all about.\" - Jet Black (Cowboy Bebop)",
+    "\"If you’re scared of falling over, you’ll just fall even more.\" - Ai Hoshino (Oshi no Ko)"
 ];
 
 module.exports = {
